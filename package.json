@@ -1,0 +1,36 @@
+{
+  "name": "9jaworks",
+  "version": "1.0.0",
+  "description": "9JAWORKS",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "nodemon backend/server.js",
+    "start": "node backend/server.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/Ndman90/9JAWORKS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ndman90/9JAWORKS/issues"
+  },
+  "homepage": "https://github.com/Ndman90/9JAWORKS#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "mailtrap": "^3.4.0",
+    "mongoose": "^8.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
