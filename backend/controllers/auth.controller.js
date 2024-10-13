@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+
 export const signup = async(req, res) => {
     try {
         const {name, username, email, password} = req.body;
@@ -43,6 +45,14 @@ export const signup = async(req, res) => {
 		});
 
         res.status(200).json({ message: "User Registered Successfully" });
+
+        const profileUrl = process.env.CLIENT_URL + "/profile/" + user.username;
+
+        try {
+            await sendWelcomeEmail(user.email, user.name, profileUrl)
+        } catch (emailError) {
+            console.error("Error In Sending Welcome Email", emailError);
+        }
     }
     catch (error) {
         console.log("Error in Signup: ", error.message);
@@ -52,10 +62,48 @@ export const signup = async(req, res) => {
     
 }; 
 
-export const login = (req, res) => {
-    res.send("login");
-}
+export const login = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+
+		// Check if user exists
+		const user = await User.findOne({ username });
+		if (!user) {
+			return res.status(400).json({ message: "Invalid Username" });
+		}
+
+		// Check password
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) {
+			return res.status(400).json({ message: "Invalid Password" });
+		}
+
+		// Create and send token
+		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+		await res.cookie("jwt-9JAWORKS", token, {
+			httpOnly: true,
+			maxAge: 3 * 24 * 60 * 60 * 1000,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV === "production",
+		});
+
+		res.json({ message: "Logged in successfully" });
+	} catch (error) {
+		console.error("Error in login controller:", error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
 
 export const logout = (req, res) => {
-    res.send("logout");
-}
+	res.clearCookie("jwt-9JAWORKS");
+	res.json({ message: "Logged out successfully" });
+};
+
+export const getCurrentUser = async (req, res) => {
+	try {
+		res.json(req.user);
+	} catch (error) {
+		console.error("Error in getCurrentUser controller:", error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
