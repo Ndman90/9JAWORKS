@@ -32,13 +32,13 @@ const SignUpForm = () => {
 	};
 
 	return (
-		<form onSubmit={handleSignUp} className='flex flex-col gap-4'>
+		<form onSubmit={handleSignUp} className='flex flex-col gap-4 border-2 border-green-500 p-4 rounded-lg'>
 			<input
 				type='text'
 				placeholder='Full name'
 				value={name}
 				onChange={(e) => setName(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 			<input
@@ -46,7 +46,7 @@ const SignUpForm = () => {
 				placeholder='Username'
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 			<input
@@ -54,7 +54,7 @@ const SignUpForm = () => {
 				placeholder='Email'
 				value={email}
 				onChange={(e) => setEmail(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 			<input
@@ -62,7 +62,7 @@ const SignUpForm = () => {
 				placeholder='Password (6+ characters)'
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 

@@ -25,13 +25,13 @@ const LoginForm = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit} className='space-y-4 w-full max-w-md'>
+		<form onSubmit={handleSubmit} className='space-y-4 w-full max-w-md border-2 border-green-500 p-4 rounded-lg'>
 			<input
 				type='text'
 				placeholder='Username'
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 			<input
@@ -39,7 +39,7 @@ const LoginForm = () => {
 				placeholder='Password'
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full'
+				className='input input-bordered w-full border-black placeholder-black'
 				required
 			/>
 
