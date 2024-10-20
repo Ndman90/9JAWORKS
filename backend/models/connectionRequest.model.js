@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const linkupRequestSchema = new mongoose.Schema(
+const connectionRequestSchema = new mongoose.Schema(
 	{
 		sender: {
 			type: mongoose.Schema.Types.ObjectId,
@@ -21,6 +21,6 @@ const linkupRequestSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-const LinkupRequest = mongoose.model("LinkupRequest", linkupRequestSchema);
+const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema);
 
-export default LinkupRequest;
+export default ConnectionRequest;
