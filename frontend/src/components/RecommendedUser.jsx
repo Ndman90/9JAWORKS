@@ -6,10 +6,18 @@ import { Check, Clock, UserCheck, UserPlus, X } from "lucide-react";
 
 const RecommendedUser = ({ user }) => {
 	const queryClient = useQueryClient();
+	if (!user || !user._id) {
+		console.error("Invalid user data:", user);
+		return null;
+	  }
 
-	const { data: connectionStatus, isLoading } = useQuery({
+	const url = `/connections/status/${user._id}`;
+	console.log("API URL:", url);
+
+	const { data: connectionStatus, isLoading, error } = useQuery({
 		queryKey: ["connectionStatus", user._id],
-		queryFn: () => axiosInstance.get(`/connections/status/${user._id}`),
+		queryFn: () => axiosInstance.get(url).then(res => res.data),
+		enabled: !!user._id, // Only run query if user._id is defined
 	});
 
 	const { mutate: sendConnectionRequest } = useMutation({

@@ -8,7 +8,7 @@ export const getSuggestedConnections = async (req, res) => {
 		const suggestedUser = await User.find({
 			_id: {
 				$ne: req.user._id,
-				$nin: currentUser.connections,
+				$nin: currentUser.connection,
 			},
 		})
 			.select("name username profilePicture headline")

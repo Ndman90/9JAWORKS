@@ -12,7 +12,7 @@ export const sendConnectionRequest = async (req, res) => {
 			return res.status(400).json({ message: "You can't send a request to yourself" });
 		}
 
-		if (req.user.connections.includes(userId)) {
+		if (req.user.connection.includes(userId)) {
 			return res.status(400).json({ message: "You are already connected" });
 		}
 
@@ -65,8 +65,8 @@ export const acceptConnectionRequest = async (req, res) => {
 		await request.save();
 
 		// if im your friend then ur also my friend ;)
-		await User.findByIdAndUpdate(request.sender._id, { $addToSet: { connections: userId } });
-		await User.findByIdAndUpdate(userId, { $addToSet: { connections: request.sender._id } });
+		await User.findByIdAndUpdate(request.sender._id, { $addToSet: { connection: userId } });
+		await User.findByIdAndUpdate(userId, { $addToSet: { connection: request.sender._id } });
 
 		const notification = new Notification({
 			recipient: request.sender._id,
@@ -144,7 +144,7 @@ export const getUserConnections = async (req, res) => {
 			"name username profilePicture headline connections"
 		);
 
-		res.json(user.connections);
+		res.json(user.connection);
 	} catch (error) {
 		console.error("Error in getUserConnections controller:", error);
 		res.status(500).json({ message: "Server error" });
@@ -172,6 +172,11 @@ export const getConnectionStatus = async (req, res) => {
 		const currentUserId = req.user._id;
 
 		const currentUser = req.user;
+
+		if (!currentUser || !Array.isArray(currentUser.connections)) {
+			return res.status(400).json({ message: "User connections are not available or not an array" });
+		  }
+
 		if (currentUser.connections.includes(targetUserId)) {
 			return res.json({ status: "connected" });
 		}

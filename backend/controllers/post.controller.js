@@ -5,10 +5,33 @@ import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
 
 export const getFeedPosts = async (req, res) => {
 	try {
-		const posts = await Post.find({ author: { $in: [...req.user.connections, req.user._id] } })
+		if (!req.user || !req.user._id) {
+			return res.status(404).json({ message: "Invalid user data" });
+		}
+		const userConnections = req.user.connection && req.user.connection.length
+			? [...req.user.connection, req.user._id]
+			: [req.user._id];
+			// Log userConnections for debugging
+			console.log("User Connections: ", userConnections);
+
+		// Log the user data to ensure req.user is available
+		console.log("Authenticated User:", req.user);
+
+		// Check if req.user exists and connections are valid
+		if (!req.user || !Array.isArray(req.user.connection)) {
+			return res.status(400).json({ message: "Invalid user data or no connections available" });
+		}
+		const posts = await Post.find({ author: { $in: [...req.user.connection, req.user._id] } })
 			.populate("author", "name username profilePicture headline")
 			.populate("comments.user", "name profilePicture")
 			.sort({ createdAt: -1 });
+
+			console.log("Fetched posts:", posts);
+
+			// If no posts are found, respond with a suitable message
+		if (!posts.length) {
+			return res.status(404).json({ message: "No posts found" });
+		}
 
 		res.status(200).json(posts);
 	} catch (error) {

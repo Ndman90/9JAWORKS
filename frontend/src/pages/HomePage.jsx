@@ -21,6 +21,8 @@ const HomePage = () => {
 		queryKey: ["posts"],
 		queryFn: async () => {
 			const res = await axiosInstance.get("/posts");
+			console.log("Fetched post:", res.data);
+
 			return res.data;
 		},
 	});

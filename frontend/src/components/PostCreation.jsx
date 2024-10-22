@@ -11,7 +11,7 @@ const PostCreation = ({ user }) => {
 
 	const queryClient = useQueryClient();
 
-	const { mutate: createPostMutation, isPending } = useMutation({
+	const { mutate: createPostMutation, isLoading } = useMutation({
 		mutationFn: async (postData) => {
 			const res = await axiosInstance.post("/posts/create", postData, {
 				headers: { "Content-Type": "application/json" },
@@ -94,9 +94,9 @@ const PostCreation = ({ user }) => {
 				<button
 					className='bg-primary text-white rounded-lg px-4 py-2 hover:bg-primary-dark transition-colors duration-200'
 					onClick={handlePostCreation}
-					disabled={isPending}
+					disabled={isLoading}
 				>
-					{isPending ? <Loader className='size-5 animate-spin' /> : "Share"}
+					{isLoading ? <Loader className='size-5 animate-spin' /> : "Share"}
 				</button>
 			</div>
 		</div>

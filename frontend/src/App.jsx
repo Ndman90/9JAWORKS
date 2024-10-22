@@ -18,8 +18,10 @@ function App() {
 		queryFn: async () => {
 			try {
 				const res = await axiosInstance.get("/auth/me");
+				console.log(res.data);
 				return res.data;
 			} catch (err) {
+				console.log("Debugging Error");
 				if (err.response && err.response.status === 401) {
 					return null;
 				}

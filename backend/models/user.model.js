@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        default: "Imo, Nigeria"
+        default: "Nigeria"
     },
     about: {
         type: String,
