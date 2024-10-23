@@ -3,41 +3,41 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
     },
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     password: {
         type: String,
-        required: true
+        required: true,
     },
     profilePicture: {
         type: String,
-        default: ""
+        default: "",
     },
     bannerImage: {
         type: String,
-        default: ""
+        default: "",
     },
     headline: {
         type: String,
-        default: "9JAWORKS USER"
+        default: "9JAWORKS USER",
     },
     location: {
         type: String,
-        default: "Nigeria"
+        default: "Nigeria",
     },
     about: {
         type: String,
-        default: ""
+        default: "",
     },
     skills: [String],
     experience: [
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
             company: String,
             startDate: Date,
             endDate: Date,
-            description: String
+            description: String,
         },
     ],
     education: [
@@ -54,16 +54,17 @@ const userSchema = new mongoose.Schema({
             school: String,
             filedOfStudy: String,
             startYear: Number,
-            endYear: Number
+            endYear: Number,
         },
     ],
     connection: [
         {
-            type: mongoose.Schema.Types.ObjectId, ref: "User"
-        }
-    ]
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "User",
+        },
+    ],
 },
-{timestamps:true}
+{timestamps: true}
 );
 
 const User = mongoose.model("User", userSchema);

@@ -3,9 +3,12 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { Check, Clock, UserCheck, UserPlus, X } from "lucide-react";
+import React, { useState } from 'react';
 
 const RecommendedUser = ({ user }) => {
 	const queryClient = useQueryClient();
+	const [localStatus, setLocalStatus] = useState(null); // for button status
+
 	if (!user || !user._id) {
 		console.error("Invalid user data:", user);
 		return null;
@@ -25,6 +28,7 @@ const RecommendedUser = ({ user }) => {
 		onSuccess: () => {
 			toast.success("Connection request sent successfully");
 			queryClient.invalidateQueries({ queryKey: ["connectionStatus", user._id] });
+			setLocalStatus('pending'); // Update local status to pending after sending request
 		},
 		onError: (error) => {
 			toast.error(error.response?.data?.error || "An error occurred");
@@ -61,8 +65,10 @@ const RecommendedUser = ({ user }) => {
 				</button>
 			);
 		}
+		// Local status should take precedence over data from the server
+		const statusToRender = localStatus || connectionStatus?.data?.status;
 
-		switch (connectionStatus?.data?.status) {
+		switch (statusToRender) {
 			case "pending":
 				return (
 					<button

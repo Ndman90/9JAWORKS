@@ -3,10 +3,14 @@ import ConnectionRequest from "../models/connectionRequest.model.js";
 import Notification from "../models/notification.model.js";
 import User from "../models/user.model.js";
 
+// Controller to send a connection request
 export const sendConnectionRequest = async (req, res) => {
 	try {
 		const { userId } = req.params;
 		const senderId = req.user._id;
+
+		// Log the userId for debugging
+		console.log("Recipient ID (userId):", userId);
 
 		if (senderId.toString() === userId) {
 			return res.status(400).json({ message: "You can't send a request to yourself" });
@@ -26,6 +30,7 @@ export const sendConnectionRequest = async (req, res) => {
 			return res.status(400).json({ message: "A connection request already exists" });
 		}
 
+		// Create a new connection request
 		const newRequest = new ConnectionRequest({
 			sender: senderId,
 			recipient: userId,
@@ -35,10 +40,12 @@ export const sendConnectionRequest = async (req, res) => {
 
 		res.status(201).json({ message: "Connection request sent successfully" });
 	} catch (error) {
+		console.error("Error sending connection request:", error);
 		res.status(500).json({ message: "Server error" });
 	}
 };
 
+// Other connection controllers (for accepting, rejecting, etc.) can go here
 export const acceptConnectionRequest = async (req, res) => {
 	try {
 		const { requestId } = req.params;
@@ -125,7 +132,7 @@ export const getConnectionRequests = async (req, res) => {
 
 		const requests = await ConnectionRequest.find({ recipient: userId, status: "pending" }).populate(
 			"sender",
-			"name username profilePicture headline connections"
+			"name username profilePicture headline connection"
 		);
 
 		res.json(requests);
@@ -140,8 +147,8 @@ export const getUserConnections = async (req, res) => {
 		const userId = req.user._id;
 
 		const user = await User.findById(userId).populate(
-			"connections",
-			"name username profilePicture headline connections"
+			"connection",
+			"name username profilePicture headline connection"
 		);
 
 		res.json(user.connection);
@@ -156,8 +163,8 @@ export const removeConnection = async (req, res) => {
 		const myId = req.user._id;
 		const { userId } = req.params;
 
-		await User.findByIdAndUpdate(myId, { $pull: { connections: userId } });
-		await User.findByIdAndUpdate(userId, { $pull: { connections: myId } });
+		await User.findByIdAndUpdate(myId, { $pull: { connection: userId } });
+		await User.findByIdAndUpdate(userId, { $pull: { connection: myId } });
 
 		res.json({ message: "Connection removed successfully" });
 	} catch (error) {
@@ -173,11 +180,11 @@ export const getConnectionStatus = async (req, res) => {
 
 		const currentUser = req.user;
 
-		if (!currentUser || !Array.isArray(currentUser.connections)) {
+		if (!currentUser || !Array.isArray(currentUser.connection)) {
 			return res.status(400).json({ message: "User connections are not available or not an array" });
 		  }
 
-		if (currentUser.connections.includes(targetUserId)) {
+		if (currentUser.connection.includes(targetUserId)) {
 			return res.json({ status: "connected" });
 		}
 
